@@ -11,7 +11,6 @@ Manager wm;
 FileSave fileSave;
 
 QueueHandle_t queueDataFirestore;
-QueueHandle_t queueDeviceControl;
 QueueHandle_t queueDataSensor;
 
 
@@ -86,7 +85,6 @@ void taskSendSwithDevice (void *prm){
             bitWrite (isSwitch,i,listDevice);
         }
         control.switchDevice(isSwitch); 
-        vTaskDelay (pdMS_TO_TICKS(5000));
     }
 }
 
@@ -135,7 +133,7 @@ void setup (){
     xTaskCreate (taskTakeDataSensor,            "Data Sensor",        6144, NULL, 2, NULL);  
     xTaskCreate (taskAlert,                     "Alert",              8192, NULL, 2, NULL);  
     xTaskCreate (taskSendSwithDevice,           "Switch Device",      6144, NULL, 1, NULL);  
-    xTaskCreate (taskControlMotor,              "Control Motor",      6144, NULL, 1, NULL);   
+    xTaskCreate (taskControlMotor,              "Control Motor",      6144, NULL, 2, NULL);   
 }
 void loop (){
 }
