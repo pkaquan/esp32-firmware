@@ -1,12 +1,13 @@
 #include "Display.h"
 
+//Configure and initialize the LCD or OLED display module
 void Display ::initDisplay (){
     Wire.begin (sda,scl);
     u8g2.begin();
     u8g2.enableUTF8Print();
 }
 
-
+//Design a user interface for the LCD/OLED display
 void Display ::dhtDisplay (int valueTemp, int valueHumi){
   char buf1[20];
   char buf2[20];
