@@ -17,7 +17,7 @@ void ControlDevice ::switchDevice (byte value) {
     digitalWrite (pinLatch, HIGH);
 }
 void ControlDevice :: buzzerDevice (int value) {
-    if (value >=){
+    if (value >= 1000){
         digitalWrite(pinBuzzer,HIGH);
     } else{
         digitalWrite(pinBuzzer,LOW);
