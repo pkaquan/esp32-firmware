@@ -11,6 +11,7 @@ Manager wm;
 FileSave fileSave;
 
 QueueHandle_t queueDataFirestore;
+QueueHandle_t queueRelay;
 QueueHandle_t queueDataSensor;
 
 
@@ -19,7 +20,7 @@ String userPassword = "";
 String passwordAP = "";
 String newPassword = "";
 
-uint8_t isSwitch = 0;
+uint8_t isSwitch = 0b00000000;
 
 
 
@@ -46,7 +47,7 @@ void taskTakeDataSensor (void *prm){
         sensor_data.humidityValue = sensor.dhtHumidity();
         sensor_data.temperatureValue = sensor.dhtTemperature();        
         xQueueSend (queueDataSensor,&sensor_data,portMAX_DELAY);
-        vTaskDelay (pdMS_TO_TICKS(5000));
+        vTaskDelay (pdMS_TO_TICKS(2000));
     }
 };
 
@@ -63,7 +64,8 @@ void taskDataFirestore (void *prm){
     }
 }
 
-void taskAlert (void *prm) {
+
+void sendDataonDevice (void *prm) {
     TakeDataSensor data;
     while (1) {
         if (xQueueReceive (queueDataSensor, &data, portMAX_DELAY) == pdPASS){
@@ -73,18 +75,19 @@ void taskAlert (void *prm) {
             control.buzzerDevice (data.mq2Value);
             display.dhtDisplay (data.temperatureValue, data.humidityValue);
         }
-        vTaskDelay (pdMS_TO_TICKS(5000));
     }
 }
 
 void taskSendSwithDevice (void *prm){
     while (1){
         for (int i = 0; i< 8;i++){
-            String textValue  = "Device Control " + String (i+1);
-            bool listDevice = service.getBool (textValue);
+            char text[20];
+            snprintf (text,sizeof(text),"Device Control %d", i+1);
+            bool listDevice = service.getBool (text);
             bitWrite (isSwitch,i,listDevice);
         }
-        control.switchDevice(isSwitch); 
+        control.switchDevice(isSwitch);
+        vTaskDelay (pdMS_TO_TICKS(20000));
     }
 }
 
@@ -94,7 +97,6 @@ void taskControlMotor (void *prm){
         if (xQueueReceive(queueDataFirestore,&data,portMAX_DELAY) == pdPASS){
             control.pwmDevice(data.state,data.hour,data.minute,data.time,data.speed);
         }
-        vTaskDelay (pdMS_TO_TICKS(5000));
     }
 }
 
@@ -125,15 +127,15 @@ void setup (){
     control.initDevice ();
 
     // Creat Queue
-    queueDataFirestore = xQueueCreate (24,sizeof (TakeDataFirestore));
-    queueDataSensor    = xQueueCreate (16,sizeof(TakeDataSensor));
+    queueDataFirestore = xQueueCreate (32,sizeof (TakeDataFirestore));
+    queueDataSensor    = xQueueCreate (32,sizeof(TakeDataSensor));
 
     // Task Scheduling
-    xTaskCreate (taskDataFirestore,             "Data Firestore",     8192, NULL, 2, NULL);  
-    xTaskCreate (taskTakeDataSensor,            "Data Sensor",        6144, NULL, 2, NULL);  
-    xTaskCreate (taskAlert,                     "Alert",              8192, NULL, 2, NULL);  
-    xTaskCreate (taskSendSwithDevice,           "Switch Device",      6144, NULL, 1, NULL);  
-    xTaskCreate (taskControlMotor,              "Control Motor",      6144, NULL, 2, NULL);   
+    xTaskCreate (taskDataFirestore,   "Data Firestore",      12288, NULL, 2, NULL);  
+    xTaskCreate (taskTakeDataSensor,  "Data Sensor",         8192,  NULL, 2, NULL);  
+    xTaskCreate (sendDataonDevice,    "Send Data on Device", 12288, NULL, 2, NULL);  
+    xTaskCreate (taskSendSwithDevice, "Switch Device",       16384, NULL, 2, NULL);  
+    xTaskCreate (taskControlMotor,    "Control Motor",       8192,  NULL, 2, NULL);   
 }
 void loop (){
 }
