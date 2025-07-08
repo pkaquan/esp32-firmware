@@ -4,9 +4,7 @@ AESEncrytion::AESEncrytion() {
     mbedtls_aes_init(&aes);
 }
 
-
-
-
+// AES encryption example
 String AESEncrytion::encrypt( String plainText) {
     unsigned char output[size];
     unsigned char iv_copy[size];
@@ -31,6 +29,8 @@ String AESEncrytion::encrypt( String plainText) {
     return hexString;
 }
 
+
+// AES Decrypt example
 String AESEncrytion::decrypt(String hexCipherText) {
     unsigned char cipherBytes[size];
     unsigned char decrypted[size];
