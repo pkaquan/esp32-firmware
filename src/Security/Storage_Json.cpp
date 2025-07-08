@@ -1,6 +1,6 @@
 #include "Storage_Json.h"
 
-
+//Store encrypted data.
 void FileSave::saveConfigFile (String jsonEmail, String jsonPassword, String passwordAP){
     String enCryption = aes.encrypt (jsonPassword);
     if (LittleFS.begin(true)||LittleFS.begin(false)){
@@ -15,6 +15,8 @@ void FileSave::saveConfigFile (String jsonEmail, String jsonPassword, String pas
         file.close();
     }
 }
+
+//Retrieve and decrypt data
 bool FileSave::loadConfigFile(String& jsonEmail, String &jsonPassword, String passwordAP) {
     if (LittleFS.begin(true)||LittleFS.begin(false)){
         File file = LittleFS.open(jsonFile,"r");
