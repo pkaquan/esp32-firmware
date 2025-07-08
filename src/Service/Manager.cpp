@@ -1,5 +1,6 @@
 #include "Manager.h"
 
+//Configure Wi-Fi
 void Manager ::beginAP(String &userEmail, String &userPassword, String &passwordAP, bool force)
 {
     WiFi.mode(WIFI_STA);
@@ -36,6 +37,8 @@ void Manager ::beginAP(String &userEmail, String &userPassword, String &password
     userPassword = custom_user_password.getValue();
     passwordAP = custom_password_ap.getValue();
 }
+
+//Save settings
 bool Manager ::saveConfig()
 {
     return showSaveConfig;
