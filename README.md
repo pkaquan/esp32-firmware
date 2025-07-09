@@ -14,7 +14,7 @@ A real-time smart home control system using **ESP32 (with FreeRTOS)**, **Firebas
 - 🧱 Clean code: FreeRTOS, class-based, modular file structure
 
 ## ⚙️ Diagram
-![Connection diagram](images/diagram.png)
+![Connection diagram](images/diagram.jpg)
 
 ## 🗂 Project Structure
 /include
