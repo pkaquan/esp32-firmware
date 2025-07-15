@@ -1,4 +1,4 @@
-<img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/027a0445-cef9-4529-adc4-176718699c81" /># 🏠 Smart Home with ESP32 + FreeRTOS + Firebase
+## 🏠 Smart Home with ESP32 + FreeRTOS + Firebase
 
 A real-time smart home control system using **ESP32 (with FreeRTOS)**, **Firebase (Firestore + Storage)**, and a **Flutter mobile app**. The project enables users to control multiple devices (motors, lights, relays) and monitor sensors remotely through cloud-based infrastructure.
 
